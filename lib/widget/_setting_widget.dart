@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../controllers/gallery_controller.dart';
 import '../views/gallery_picker_view.dart';
 import '../helpers/database_helper.dart';
-// 가로 스냅 스크롤 위젯, 긴팔
+
 class for_longtop extends StatefulWidget {
   final VoidCallback onSwitch;
   final PageController pageController;

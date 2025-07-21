@@ -63,7 +63,6 @@ class GalleryController extends ChangeNotifier {
   }
 }
 
-///outfit_table용 컨트롤러
 class OutfitController extends ChangeNotifier {
   final DatabaseHelper _db = DatabaseHelper.instance;
   final List<PageController> _pageControllers;

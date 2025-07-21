@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'screen/Socialscreen.dart';
 import 'screen/Settingscreen.dart';
 import 'screen/Closetscreen.dart';
-import 'screen/Userscreen.dart';
-import '../utils/api_client.dart';
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
@@ -24,9 +21,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _currentIndex = 2;
-  final ApiClient apiClient = ApiClient();
-
+  int _currentIndex = 0;
 
   final GlobalKey<State> _socialKey = GlobalKey<State>();
 
@@ -36,8 +31,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _pages = [
-      Scaffold(body: UserScreen(apiClient: apiClient)),
-      Scaffold(body: SocialScreen(key: _socialKey, apiClient: apiClient)),
       Scaffold(body: SettingScreen()),
       Scaffold(body: ClosetsScreen()),
     ];
@@ -66,8 +59,6 @@ class _HomePageState extends State<HomePage> {
           });
         },
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.account_circle), label: '계정'),
-          BottomNavigationBarItem(icon: Icon(Icons.group), label: '소셜'),
           BottomNavigationBarItem(icon: Icon(Icons.add_box), label: '세팅'),
           BottomNavigationBarItem(icon: Icon(Icons.checkroom), label: '옷장'),
         ],

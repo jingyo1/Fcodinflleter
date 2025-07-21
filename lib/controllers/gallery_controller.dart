@@ -5,7 +5,6 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import '../helpers/database_helper.dart';
 import 'package:flutter/material.dart';
-import '../utils/PaginatedResponse.dart';
 class GalleryController extends ChangeNotifier {
   final ImagePicker _picker = ImagePicker();
   final DatabaseHelper _db = DatabaseHelper.instance;
@@ -120,31 +119,6 @@ class OutfitController extends ChangeNotifier {
     final files = await _controller.loadSavedImages(category);
     List<File> _userSelectedImages = files;
     return _userSelectedImages[index].path;
-  }
-
-  Future<bool> likeOutfit(PostResponse post) async {
-    try {
-
-      final int postId = post.id; 
-      final String topPath = post.topImageUrl;
-      final String bottomPath = post.bottomImageUrl;
-      final String shoesPath = post.shoesImageUrl;
-      final String? jacketPath = post.jacketImageUrl; 
-
-      final insertedId = await _db.insertLikedtOutfit(
-        topPath: topPath,
-        bottomPath: bottomPath,
-        shoesPath: shoesPath,
-        jacketPath: jacketPath,
-        postid: postId,
-        status: 'Like',
-      );
-
-      return insertedId > 0; 
-    } catch (e) {
-      debugPrint('[likeOutfit] 예외 발생: $e');
-      return false;
-    }
   }
 
   Future<void> deleteOutfit(int outfitId) async {

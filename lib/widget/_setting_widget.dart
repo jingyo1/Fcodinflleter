@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../controllers/gallery_controller.dart';
 import '../views/gallery_picker_view.dart';
 import '../helpers/database_helper.dart';
-
+//일단 실험적으로 변경
 class for_longtop extends StatefulWidget {
   final VoidCallback onSwitch;
   final PageController pageController;
@@ -12,26 +12,44 @@ class for_longtop extends StatefulWidget {
     required this.pageController,
     required this.onSwitch,
   }) : super(key: key);
+
   @override
   _for_longtop createState() => _for_longtop();
 }
+
 class _for_longtop extends State<for_longtop> {
   List<File> _userSelectedImages = [];
   late final GalleryController _controller;
+
   @override
   void initState() {
     super.initState();
-     _controller = GalleryController();  
+    _controller = GalleryController();
     _loadImages();
   }
 
-   Future<void> _loadImages() async {
+  Future<void> _loadImages() async {
     final files = await _controller.loadSavedImages(ClothingType.longtop);
     setState(() {
       _userSelectedImages = files;
     });
   }
-        
+
+  // 이미지 삭제
+  void _onDeleteImage(int index) {
+    setState(() {
+      _userSelectedImages.removeAt(index);
+    });
+    // 필요 시 서버 API 호출 등 추가 처리
+  }
+
+  // 이미지 추천
+  void _onRecommendImage(int index) {
+    final file = _userSelectedImages[index];
+    // TODO: AI 추천 로직 호출 or 다음 화면으로 이동
+    print('추천 로직 실행: $file');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -53,25 +71,51 @@ class _for_longtop extends State<for_longtop> {
                 pageSnapping: true,
                 itemCount: _userSelectedImages.length + 1,
                 itemBuilder: (context, index) {
+                  // 마지막은 “+ 이미지 추가” 버튼
                   if (index == _userSelectedImages.length) {
                     return Center(
                       child: AddGalleryImageButton(
                         controller: _controller,
                         type: ClothingType.longtop,
                         onImageSaved: _loadImages,
-                        pageController: widget.pageController
+                        pageController: widget.pageController,
                       ),
                     );
                   }
+                  // 이미지 아이템
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(16),
-                      child: Image.file(
-                        _userSelectedImages[index],
-                        fit: BoxFit.cover,
-                        width: double.infinity,
-                        height: double.infinity,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTapDown: (TapDownDetails details) async {
+                          // 터치 위치 기준으로 메뉴 띄우기
+                          final selected = await showMenu<String>(
+                            context: context,
+                            position: RelativeRect.fromLTRB(
+                              details.globalPosition.dx,
+                              details.globalPosition.dy,
+                              details.globalPosition.dx,
+                              details.globalPosition.dy,
+                            ),
+                            items: [
+                              PopupMenuItem(value: '삭제', child: Text('삭제')),
+                              PopupMenuItem(value: '추천', child: Text('추천')),
+                            ],
+                          );
+                          if (selected == '삭제') {
+                            _onDeleteImage(index);
+                          } else if (selected == '추천') {
+                            _onRecommendImage(index);
+                          }
+                        },
+                        child: Image.file(
+                          _userSelectedImages[index],
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: double.infinity,
+                        ),
                       ),
                     ),
                   );
@@ -80,15 +124,15 @@ class _for_longtop extends State<for_longtop> {
             ),
           ),
           Align(
-          alignment: Alignment.centerLeft,
-          child: IconButton(
-            icon: const Icon(Icons.chevron_left),
-            onPressed: widget.onSwitch,
-          ),
+            alignment: Alignment.centerLeft,
+            child: IconButton(
+              icon: const Icon(Icons.chevron_left),
+              onPressed: widget.onSwitch,
+            ),
           ),
         ],
       ),
-    );  
+    );
   }
 }
 // 가로 스냅 스크롤 위젯, 반팔

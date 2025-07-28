@@ -62,7 +62,6 @@ Widget build(BuildContext context) {
               pageControllers: pageControllers,
             ),
 
-        // 오른쪽 하단 FloatingActionButton 그룹
         Positioned(
           bottom: 16,
           right: 16,

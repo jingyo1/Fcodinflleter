@@ -19,7 +19,7 @@ class ClosetGrid extends StatelessWidget {
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,          
         crossAxisSpacing: 12,       // 가로 
-        mainAxisSpacing: 12,        // 세로 
+        mainAxisSpacing: 12,        // 세로 2
         childAspectRatio: 3 / 4,    // 가로:세로 비율
       ),
       itemBuilder: (ctx, idx) {
